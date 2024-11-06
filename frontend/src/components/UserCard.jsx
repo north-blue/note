@@ -1,10 +1,24 @@
-import { Avatar, Box, Card, CardBody, CardHeader, Flex, Heading, IconButton, Text, useToast } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Card,
+  CardBody,
+  CardHeader,
+  Flex,
+  Heading,
+  IconButton,
+  Text,
+  useToast,
+  useColorMode,
+} from "@chakra-ui/react";
 import { BiTrash } from "react-icons/bi";
 import EditModal from "./EditModal";
 import { BASE_URL } from "../App";
 
 const UserCard = ({ user, setUsers }) => {
 	const toast = useToast();
+		const { colorMode } = useColorMode();
+
 	const handleDeleteUser = async () => {
 		try {
 			const res = await fetch(BASE_URL + "/friends/" + user.id, {
@@ -18,7 +32,7 @@ const UserCard = ({ user, setUsers }) => {
 			toast({
 				status: "success",
 				title: "Success",
-				description: "Friend deleted successfully.",
+				description: "notes deleted successfully.",
 				duration: 2000,
 				position: "top-center",
 			});
@@ -34,36 +48,51 @@ const UserCard = ({ user, setUsers }) => {
 		}
 	};
 	return (
-		<Card>
-			<CardHeader>
-				<Flex gap={4}>
-					<Flex flex={"1"} gap={"4"} alignItems={"center"}>
-						<Avatar src={user.imgUrl} />
+    <Card bg={colorMode === "light" ? "blue.500" : "gray.100"}>
+      <CardHeader>
+        <Flex gap={4}>
+          <Flex flex={"1"} gap={"4"} alignItems={"center"}>
+            <Box>
+              <Heading
+                size="sm"
+                color={colorMode === "light" ? "blue.800" : "gray.900"}
+              >
+                {user.name}
+              </Heading>
+              <Text color={colorMode === "light" ? "blue.800" : "gray.900"}>
+                {user.role}
+              </Text>
+              <Text
+                fontFamily={"Nunito, sans - serif"}
+                fontWeight={"bold"}
+				fontStyle={"italic"}
+                color={colorMode === "light" ? "red.800" : "red.900"}
+              >
+                {user.gender}
+              </Text>
+            </Box>
+          </Flex>
 
-						<Box>
-							<Heading size='sm'>{user.name}</Heading>
-							<Text>{user.role}</Text>
-						</Box>
-					</Flex>
+          <Flex>
+            <EditModal user={user} setUsers={setUsers} />
+            <IconButton
+              variant="ghost"
+              color={colorMode === "light" ? "red.800" : "red.900"}
+              size={"sm"}
+              aria-label="See menu"
+              icon={<BiTrash size={20} />}
+              onClick={handleDeleteUser}
+            />
+          </Flex>
+        </Flex>
+      </CardHeader>
 
-					<Flex>
-						<EditModal user={user} setUsers={setUsers} />
-						<IconButton
-							variant='ghost'
-							colorScheme='red'
-							size={"sm"}
-							aria-label='See menu'
-							icon={<BiTrash size={20} />}
-							onClick={handleDeleteUser}
-						/>
-					</Flex>
-				</Flex>
-			</CardHeader>
-
-			<CardBody>
-				<Text>{user.description}</Text>
-			</CardBody>
-		</Card>
-	);
+      <CardBody>
+        <Text color={colorMode === "light" ? "blue.800" : "gray.900"}>
+          {user.description}
+        </Text>
+      </CardBody>
+    </Card>
+  );
 };
 export default UserCard;

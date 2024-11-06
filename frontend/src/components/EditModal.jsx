@@ -1,26 +1,29 @@
 import {
-	Button,
-	Flex,
-	FormControl,
-	FormLabel,
-	IconButton,
-	Input,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	ModalOverlay,
-	Textarea,
-	useDisclosure,
-	useToast,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  IconButton,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Textarea,
+  useDisclosure,
+  useToast,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { BiEditAlt } from "react-icons/bi";
+import { MdEditCalendar } from "react-icons/md";
 import { BASE_URL } from "../App";
 
 function EditModal({ setUsers, user }) {
+const { colorMode } = useColorMode();
+
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [isLoading, setIsLoading] = useState(false);
 	const [inputs, setInputs] = useState({
@@ -47,12 +50,12 @@ function EditModal({ setUsers, user }) {
 			}
 			setUsers((prevUsers) => prevUsers.map((u) => (u.id === user.id ? data : u)));
 			toast({
-				status: "success",
-				title: "Yayy! 🎉",
-				description: "Friend updated successfully.",
-				duration: 2000,
-				position: "top-center",
-			});
+        status: "success",
+        title: "Updated 🎉",
+        description: "The notes updated successfully.",
+        duration: 2000,
+        position: "top-center",
+      });
 			onClose();
 		} catch (error) {
 			toast({
@@ -68,149 +71,84 @@ function EditModal({ setUsers, user }) {
 	};
 
 	return (
-		<>
-			<IconButton
-				onClick={onOpen}
-				variant='ghost'
-				colorScheme='blue'
-				aria-label='See menu'
-				size={"sm"}
-				icon={<BiEditAlt size={20} />}
-			/>
+    <>
+      <IconButton
+        onClick={onOpen}
+        variant="ghost"
+        color={colorMode === "light" ? "blue.300" : "blue.900"}
+        aria-label="See menu"
+        size={"sm"}
+        icon={<MdEditCalendar size={20} />}
+      />
 
-			<Modal isOpen={isOpen} onClose={onClose}>
-				<ModalOverlay />
-				<form onSubmit={handleEditUser}>
-					<ModalContent>
-						<ModalHeader>My new BFF 😍</ModalHeader>
-						<ModalCloseButton />
-						<ModalBody pb={6}>
-							<Flex alignItems={"center"} gap={4}>
-								<FormControl>
-									<FormLabel>Full Name</FormLabel>
-									<Input
-										placeholder='John Doe'
-										value={inputs.name}
-										onChange={(e) => setInputs((prev) => ({ ...prev, name: e.target.value }))}
-									/>
-								</FormControl>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <form onSubmit={handleEditUser}>
+          <ModalContent bg={colorMode === "light" ? "blue.200" : "blue.500"}>
+            <ModalHeader>Edit The Notes</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <Flex alignItems={"center"} gap={4}>
+                <FormControl>
+                  <FormLabel>Title</FormLabel>
+                  <Input
+                    placeholder="Type The Title"
+                    value={inputs.name}
+                    onChange={(e) =>
+                      setInputs((prev) => ({ ...prev, name: e.target.value }))
+                    }
+                  />
+                </FormControl>
 
-								<FormControl>
-									<FormLabel>Role</FormLabel>
-									<Input
-										placeholder='Software Engineer'
-										value={inputs.role}
-										onChange={(e) => setInputs((prev) => ({ ...prev, role: e.target.value }))}
-									/>
-								</FormControl>
-							</Flex>
-							<FormControl mt={4}>
-								<FormLabel>Description</FormLabel>
-								<Textarea
-									resize={"none"}
-									overflowY={"hidden"}
-									placeholder="He's a software engineer who loves to code and build things."
-									value={inputs.description}
-									onChange={(e) => setInputs((prev) => ({ ...prev, description: e.target.value }))}
-								/>
-							</FormControl>
-						</ModalBody>
+                <FormControl>
+                  <FormLabel>Sub-Title</FormLabel>
+                  <Input
+                    placeholder="Type The Sub-Title"
+                    value={inputs.role}
+                    onChange={(e) =>
+                      setInputs((prev) => ({ ...prev, role: e.target.value }))
+                    }
+                  />
+                </FormControl>
+              </Flex>
+              <FormControl mt={4}>
+                <FormLabel>Description</FormLabel>
+                <Textarea
+                  resize={"none"}
+                  overflowY={"hidden"}
+                  placeholder="Type The Description.."
+                  value={inputs.description}
+                  onChange={(e) =>
+                    setInputs((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
+                />
+              </FormControl>
+            </ModalBody>
 
-						<ModalFooter>
-							<Button colorScheme='blue' mr={3} type='submit' isLoading={isLoading}>
-								Update
-							</Button>
-							<Button onClick={onClose}>Cancel</Button>
-						</ModalFooter>
-					</ModalContent>
-				</form>
-			</Modal>
-		</>
-	);
+            <ModalFooter justifyContent={"space-between"}>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                type="submit"
+                isLoading={isLoading}
+                width={{ base: "100%", md: "100%" }}
+              >
+                Update
+              </Button>
+              <Button width={{ base: "100%", md: "100%" }}  onClick={onClose}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </form>
+      </Modal>
+    </>
+  );
 }
 
 export default EditModal;
 
-// STARTER CODE
-// import {
-// 	Button,
-// 	Flex,
-// 	FormControl,
-// 	FormLabel,
-// 	IconButton,
-// 	Input,
-// 	Modal,
-// 	ModalBody,
-// 	ModalCloseButton,
-// 	ModalContent,
-// 	ModalFooter,
-// 	ModalHeader,
-// 	ModalOverlay,
-// 	Radio,
-// 	RadioGroup,
-// 	Textarea,
-// 	useDisclosure,
-// } from "@chakra-ui/react";
-// import { BiEditAlt } from "react-icons/bi";
 
-// function EditModal({ user }) {
-// 	const { isOpen, onOpen, onClose } = useDisclosure();
-
-// 	return (
-// 		<>
-// 			<IconButton
-// 				onClick={onOpen}
-// 				variant='ghost'
-// 				colorScheme='blue'
-// 				aria-label='See menu'
-// 				size={"sm"}
-// 				icon={<BiEditAlt size={20} />}
-// 			/>
-
-// 			<Modal isOpen={isOpen} onClose={onClose}>
-// 				<ModalOverlay />
-// 				<ModalContent>
-// 					<ModalHeader>My new BFF 😍</ModalHeader>
-// 					<ModalCloseButton />
-// 					<ModalBody pb={6}>
-// 						<Flex alignItems={"center"} gap={4}>
-// 							<FormControl>
-// 								<FormLabel>Full Name</FormLabel>
-// 								<Input placeholder='John Doe' />
-// 							</FormControl>
-
-// 							<FormControl>
-// 								<FormLabel>Role</FormLabel>
-// 								<Input placeholder='Software Engineer' />
-// 							</FormControl>
-// 						</Flex>
-// 						<FormControl mt={4}>
-// 							<FormLabel>Description</FormLabel>
-// 							<Textarea
-// 								resize={"none"}
-// 								overflowY={"hidden"}
-// 								placeholder="He's a software engineer who loves to code and build things.
-//               "
-// 							/>
-// 						</FormControl>
-// 						<RadioGroup defaultValue='male' mt={4}>
-// 							<Flex gap={5}>
-// 								<Radio value='male'>Male</Radio>
-// 								<Radio value='female'>Female</Radio>
-// 							</Flex>
-// 						</RadioGroup>
-// 					</ModalBody>
-
-// 					<ModalFooter>
-// 						<Button colorScheme='blue' mr={3}>
-// 							Add
-// 						</Button>
-// 						<Button onClick={onClose}>Cancel</Button>
-// 					</ModalFooter>
-// 				</ModalContent>
-// 			</Modal>
-// 		</>
-// 	);
-// }
-
-// export default EditModal;
